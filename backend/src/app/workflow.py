@@ -28,21 +28,24 @@ class SistemaAgentes:
 
     async def executar_fluxo(self):
         inicio_total = time.time()
+        # self.agente_c1.executar(self.texto)
 
-        tarefas = [
-            self.agente_c1.executar(self.texto),
-            self.agente_c2.executar(self.tema, self.texto),
-            self.agente_c3.executar(self.texto),
-            self.agente_c4.executar(self.texto),
-            self.agente_c5.executar(self.texto),
-        ]
+        # tarefas = [
+        #     self.agente_c2.executar(self.tema, self.texto),
+        #     # self.agente_c3.executar(self.texto),
+        #     # self.agente_c4.executar(self.texto),
+        #     # self.agente_c5.executar(self.texto)
+        # ]
 
-        resultados = await asyncio.gather(*tarefas)
+
+        resultados = await self.agente_c1.executar(self.texto)
+
 
 
         print("\n🔍 Resultados por competência:\n" + "-"*60)
         for i, r in enumerate(resultados, 1):
             print(f"\n📌 Competência {i}:\n{r}\n")
+    
 
         fim_total = time.time()
         print(f"\n⏱️ Tempo total: {fim_total - inicio_total:.2f} segundos\n")

@@ -1,4 +1,4 @@
-from AgenteBase import AgenteBase
+from .AgenteBase import AgenteBase
 
 
 class AgenteC3_Argumentacao(AgenteBase):

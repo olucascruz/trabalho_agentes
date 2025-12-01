@@ -1,22 +1,47 @@
-from fastapi import FastAPI
+from fastmcp import FastMCP
+from app.AgenteC1_NormaPadrao import AgenteC1_NormaPadrao
+from app.AgenteC2_CompreensaoRepertorio import AgenteC2_CompreensaoRepertorio
+from app.AgenteC3_Argumentacao import AgenteC3_Argumentacao
+from app.AgenteC4_Coesao import AgenteC4_Coesao
+from app.AgenteC5_Intervencao import AgenteC5_Intervencao
 
-app = FastAPI(
-    title="ENEM Redaction Evaluator API",
-    description="Backend para gerenciar agentes e avaliar redações.",
-    version="1.0.0"
-)
+mcp = FastMCP("My MCP Server")
 
-# Rota base
-@app.get("/")
-def root():
-    return {"message": "API do Avaliador de Redações ENEM está rodando!"}
 
-# Exemplo de rota para testar POST futuramente
-@app.post("/avaliar")
-def avaliar_redacao(redacao: str):
-    # lógica dos agentes vai ficar aqui depois
-    return {
-        "status": "ok",
-        "redacao_recebida": redacao,
-        "resultado": "A avaliação será implementada em breve!"
-    }
+@mcp.tool
+async def avaliar_c1(texto: str) -> dict:
+    agente = AgenteC1_NormaPadrao()
+    res = await agente.executar(texto)
+    return {"text": res}
+
+
+@mcp.tool
+async def avaliar_c2(tema: str, texto: str) -> dict:
+    agente = AgenteC2_CompreensaoRepertorio()
+    res = await agente.executar(tema, texto)
+    return {"text": res}
+
+
+@mcp.tool
+async def avaliar_c3(texto: str) -> dict:
+    agente = AgenteC3_Argumentacao()
+    res = await agente.executar(texto)
+    return {"text": res}
+
+
+@mcp.tool
+async def avaliar_c4(texto: str) -> dict:
+    agente = AgenteC4_Coesao()
+    res = await agente.executar(texto)
+    return {"text": res}
+
+
+@mcp.tool
+async def avaliar_c5(texto: str) -> dict:
+    agente = AgenteC5_Intervencao()
+    res = await agente.executar(texto)
+    return {"text": res}
+
+
+if __name__ == "__main__":
+    mcp.run()

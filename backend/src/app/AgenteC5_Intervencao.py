@@ -1,4 +1,4 @@
-from AgenteBase import AgenteBase
+from .AgenteBase import AgenteBase
 
 
 class AgenteC5_Intervencao(AgenteBase):

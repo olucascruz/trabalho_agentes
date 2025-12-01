@@ -1,7 +1,9 @@
 import aiohttp
 import time
 from colorama import Fore, Style, init
-from openai import OpenAI
+from openai import AsyncOpenAI
+import asyncio
+from functools import partial
 init(autoreset=True)
 
 # ==========================
@@ -9,16 +11,20 @@ init(autoreset=True)
 # ==========================
 async def ai_generate(model: str, prompt: str) -> str:
     """Chama o modelo do LM Studio via API HTTP local."""
-    client = OpenAI(base_url="http://192.168.1.18:1234/v1", api_key="lm-studio")
+    client = AsyncOpenAI(base_url="http://192.168.1.18:1234/v1", api_key="lm-studio")
     send_prompt = {"role": "system", "content": prompt}
-    response = client.chat.completions.create(
+
+    
+    response = await client.chat.completions.create(
         model=model,
-        messages= [send_prompt],
+        messages=[send_prompt],
         temperature=0.7,
         stream=False,
     )
-
     return response.choices[0].message.content
+
+
+
 # ==========================
 # 🧩 Classe base
 # ==========================
@@ -28,11 +34,9 @@ class AgenteBase:
 
     async def pensar(self, prompt: str) -> str:
         inicio = time.time()
-        print(f"Analisando texto - Pensando...{Style.RESET_ALL}")
+
         prompt = prompt + "\nResponda em Português."
         resposta = await ai_generate(self.modelo, prompt)
-        duracao = time.time() - inicio
-        print(f"✅ Resposta recebida ({duracao:.1f}s){Style.RESET_ALL}")
-        return resposta
 
+        return resposta
 
